@@ -268,7 +268,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/AiDownloader1.0.0 || mkdir -p .tmp/AiDownloader1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.h ../../src/AiDownloader/curlpprequest.hpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/main.cpp ../AiDownloader/aidownloader.cpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.ui .tmp/AiDownloader1.0.0/ && (cd `dirname .tmp/AiDownloader1.0.0` && $(TAR) AiDownloader1.0.0.tar AiDownloader1.0.0 && $(COMPRESS) AiDownloader1.0.0.tar) && $(MOVE) `dirname .tmp/AiDownloader1.0.0`/AiDownloader1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/AiDownloader1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.h ../../src/AiDownloader/curlpprequest.hpp ../../src/curlpprequest.hpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/main.cpp ../AiDownloader/aidownloader.cpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.ui .tmp/AiDownloader1.0.0/ && (cd `dirname .tmp/AiDownloader1.0.0` && $(TAR) AiDownloader1.0.0.tar AiDownloader1.0.0 && $(COMPRESS) AiDownloader1.0.0.tar) && $(MOVE) `dirname .tmp/AiDownloader1.0.0`/AiDownloader1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/AiDownloader1.0.0
 
 
 clean:compiler_clean 
@@ -315,14 +315,13 @@ compiler_clean: compiler_moc_header_clean compiler_uic_clean
 
 ####### Compile
 
-main.o: ../AiDownloader/main.cpp ../../src/AiDownloader/curlpprequest.cpp \
-		../../src/AiDownloader/curlpprequest.hpp \
-		../../src/AiDownloader/configuration.hpp \
-		../../src/AiDownloader/MangaObject.hpp \
-		../AiDownloader/aidownloader.h
+main.o: ../AiDownloader/main.cpp ../AiDownloader/aidownloader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../AiDownloader/main.cpp
 
-aidownloader.o: ../AiDownloader/aidownloader.cpp ../AiDownloader/aidownloader.h \
+aidownloader.o: ../AiDownloader/aidownloader.cpp ../../src/curlpprequest.cpp \
+		../../src/curlpprequest.hpp \
+		../../src/configuration.hpp \
+		../AiDownloader/aidownloader.h \
 		ui_aidownloader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o aidownloader.o ../AiDownloader/aidownloader.cpp
 

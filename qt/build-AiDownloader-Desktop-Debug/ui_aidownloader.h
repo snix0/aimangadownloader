@@ -21,7 +21,6 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableView>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -41,12 +40,10 @@ public:
     QGridLayout *gridLayout;
     QLabel *label;
     QListView *listView;
-    QTableView *tableView;
+    QListView *right;
     QMenuBar *menuBar;
     QMenu *menuFile;
-    QMenu *menuView;
     QMenu *menuSources;
-    QMenu *menuAbout;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -77,20 +74,20 @@ public:
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         label = new QLabel(centralWidget);
         label->setObjectName(QStringLiteral("label"));
-        label->setPixmap(QPixmap(QString::fromUtf8("../../res/logotroll.png")));
+        label->setPixmap(QPixmap(QString::fromUtf8("../../res/logosmall.png")));
 
-        gridLayout->addWidget(label, 0, 0, 1, 1);
+        gridLayout->addWidget(label, 1, 0, 1, 1);
 
         listView = new QListView(centralWidget);
         listView->setObjectName(QStringLiteral("listView"));
         listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-        gridLayout->addWidget(listView, 1, 0, 1, 1);
+        gridLayout->addWidget(listView, 3, 0, 1, 1);
 
-        tableView = new QTableView(centralWidget);
-        tableView->setObjectName(QStringLiteral("tableView"));
+        right = new QListView(centralWidget);
+        right->setObjectName(QStringLiteral("right"));
 
-        gridLayout->addWidget(tableView, 1, 1, 1, 1);
+        gridLayout->addWidget(right, 3, 1, 1, 1);
 
         AiDownloader->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(AiDownloader);
@@ -98,12 +95,8 @@ public:
         menuBar->setGeometry(QRect(0, 0, 1303, 19));
         menuFile = new QMenu(menuBar);
         menuFile->setObjectName(QStringLiteral("menuFile"));
-        menuView = new QMenu(menuBar);
-        menuView->setObjectName(QStringLiteral("menuView"));
         menuSources = new QMenu(menuBar);
         menuSources->setObjectName(QStringLiteral("menuSources"));
-        menuAbout = new QMenu(menuBar);
-        menuAbout->setObjectName(QStringLiteral("menuAbout"));
         AiDownloader->setMenuBar(menuBar);
         mainToolBar = new QToolBar(AiDownloader);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -113,20 +106,18 @@ public:
         AiDownloader->setStatusBar(statusBar);
 
         menuBar->addAction(menuFile->menuAction());
-        menuBar->addAction(menuView->menuAction());
         menuBar->addAction(menuSources->menuAction());
-        menuBar->addAction(menuAbout->menuAction());
         menuFile->addAction(actionFile);
         menuFile->addSeparator();
         menuFile->addAction(actionRestore);
         menuFile->addSeparator();
         menuFile->addAction(actionExit);
-        menuView->addAction(actionLog);
         menuSources->addAction(actionAdd_New_Source);
         menuSources->addAction(actionUpdate_Sources);
-        menuAbout->addAction(actionAbout);
 
         retranslateUi(AiDownloader);
+        QObject::connect(actionExit, SIGNAL(triggered()), AiDownloader, SLOT(close()));
+        QObject::connect(actionUpdate_Sources, SIGNAL(triggered()), AiDownloader, SLOT(updateMangaList()));
 
         QMetaObject::connectSlotsByName(AiDownloader);
     } // setupUi
@@ -143,9 +134,7 @@ public:
         actionAbout->setText(QApplication::translate("AiDownloader", "About", 0));
         label->setText(QString());
         menuFile->setTitle(QApplication::translate("AiDownloader", "File", 0));
-        menuView->setTitle(QApplication::translate("AiDownloader", "View", 0));
         menuSources->setTitle(QApplication::translate("AiDownloader", "Sources", 0));
-        menuAbout->setTitle(QApplication::translate("AiDownloader", "Help", 0));
     } // retranslateUi
 
 };

@@ -1,6 +1,8 @@
 #ifndef AIDOWNLOADER_H
 #define AIDOWNLOADER_H
 
+#include <vector>
+#include <QString>
 #include <QMainWindow>
 
 namespace Ui {
@@ -17,6 +19,11 @@ public:
 
 private:
     Ui::AiDownloader *ui;
+    std::vector<QString>* active_list;
+
+public slots:
+    void updateMangaList();
+    void on_listView_clicked();
 };
 
 #endif // AIDOWNLOADER_H

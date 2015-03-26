@@ -14,10 +14,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         aidownloader.cpp \
-    ../../src/AiDownloader/curlpprequest.cpp
+    ../../src/curlpprequest.cpp
 
 HEADERS  += aidownloader.h \
-    ../../src/AiDownloader/curlpprequest.hpp
+    ../../src/AiDownloader/curlpprequest.hpp \
+    ../../src/curlpprequest.hpp
 
 FORMS    += aidownloader.ui
 
