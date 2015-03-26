@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -14,11 +14,13 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         aidownloader.cpp \
-    ../../src/curlpprequest.cpp
+    ../../src/curlpprequest.cpp \
+    ../../src/parser.cpp
 
 HEADERS  += aidownloader.h \
     ../../src/AiDownloader/curlpprequest.hpp \
-    ../../src/curlpprequest.hpp
+    ../../src/curlpprequest.hpp \
+    ../../src/parser.hpp
 
 FORMS    += aidownloader.ui
 

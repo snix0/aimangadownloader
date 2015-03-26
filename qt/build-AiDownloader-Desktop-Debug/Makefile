@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_WIDGETS_LIB -DQT_NETWORK_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I../AiDownloader -isystem /usr/include/libxml2 -isystem /usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -isystem /usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem /usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include -isystem /usr/include/libxml++-2.6 -I/usr/lib/libxml++-2.6/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I.
+INCPATH       = -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I../AiDownloader -isystem /usr/include/libxml2 -isystem /usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -isystem /usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -isystem /usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include -isystem /usr/include/libxml++-2.6 -I/usr/lib/libxml++-2.6/include -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtNetwork -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I.
 LINK          = g++
 LFLAGS        = -m64
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lxml++-2.6 -lxml2 -lcurlpp -Wl,-z,relro -lstdc++ -lcurl -lglibmm-2.4 -lgobject-2.0 -lglib-2.0 -lsigc-2.0 -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -lxml++-2.6 -lxml2 -lcurlpp -Wl,-z,relro -lstdc++ -lcurl -lglibmm-2.4 -lgobject-2.0 -lglib-2.0 -lsigc-2.0 -lQt5Widgets -lQt5Network -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
@@ -46,9 +46,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../AiDownloader/main.cpp \
-		../AiDownloader/aidownloader.cpp moc_aidownloader.cpp
+		../AiDownloader/aidownloader.cpp \
+		../../src/parser.cpp moc_aidownloader.cpp
 OBJECTS       = main.o \
 		aidownloader.o \
+		parser.o \
 		moc_aidownloader.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf \
@@ -107,7 +109,8 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../AiDownloader/AiDownloader.pro ../AiDownloader/main.cpp \
-		../AiDownloader/aidownloader.cpp
+		../AiDownloader/aidownloader.cpp \
+		../../src/parser.cpp
 QMAKE_TARGET  = AiDownloader
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = AiDownloader
@@ -199,7 +202,8 @@ Makefile: ../AiDownloader/AiDownloader.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs
 		../AiDownloader/AiDownloader.pro \
 		/usr/lib/x86_64-linux-gnu/libQt5Widgets.prl \
 		/usr/lib/x86_64-linux-gnu/libQt5Gui.prl \
-		/usr/lib/x86_64-linux-gnu/libQt5Core.prl
+		/usr/lib/x86_64-linux-gnu/libQt5Core.prl \
+		/usr/lib/x86_64-linux-gnu/libQt5Network.prl
 	$(QMAKE) -spec linux-g++-64 CONFIG+=debug -o Makefile ../AiDownloader/AiDownloader.pro
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf:
 /usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/shell-unix.conf:
@@ -261,6 +265,7 @@ Makefile: ../AiDownloader/AiDownloader.pro /usr/lib/x86_64-linux-gnu/qt5/mkspecs
 /usr/lib/x86_64-linux-gnu/libQt5Widgets.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Gui.prl:
 /usr/lib/x86_64-linux-gnu/libQt5Core.prl:
+/usr/lib/x86_64-linux-gnu/libQt5Network.prl:
 qmake: FORCE
 	@$(QMAKE) -spec linux-g++-64 CONFIG+=debug -o Makefile ../AiDownloader/AiDownloader.pro
 
@@ -268,7 +273,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/AiDownloader1.0.0 || mkdir -p .tmp/AiDownloader1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.h ../../src/AiDownloader/curlpprequest.hpp ../../src/curlpprequest.hpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/main.cpp ../AiDownloader/aidownloader.cpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.ui .tmp/AiDownloader1.0.0/ && (cd `dirname .tmp/AiDownloader1.0.0` && $(TAR) AiDownloader1.0.0.tar AiDownloader1.0.0 && $(COMPRESS) AiDownloader1.0.0.tar) && $(MOVE) `dirname .tmp/AiDownloader1.0.0`/AiDownloader1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/AiDownloader1.0.0
+	$(COPY_FILE) --parents $(DIST) .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.h ../../src/AiDownloader/curlpprequest.hpp ../../src/curlpprequest.hpp ../../src/parser.hpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/main.cpp ../AiDownloader/aidownloader.cpp ../../src/parser.cpp .tmp/AiDownloader1.0.0/ && $(COPY_FILE) --parents ../AiDownloader/aidownloader.ui .tmp/AiDownloader1.0.0/ && (cd `dirname .tmp/AiDownloader1.0.0` && $(TAR) AiDownloader1.0.0.tar AiDownloader1.0.0 && $(COMPRESS) AiDownloader1.0.0.tar) && $(MOVE) `dirname .tmp/AiDownloader1.0.0`/AiDownloader1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/AiDownloader1.0.0
 
 
 clean:compiler_clean 
@@ -295,7 +300,7 @@ compiler_moc_header_make_all: moc_aidownloader.cpp
 compiler_moc_header_clean:
 	-$(DEL_FILE) moc_aidownloader.cpp
 moc_aidownloader.cpp: ../AiDownloader/aidownloader.h
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/andy/Programming/Projects/AiMangaDownloader/qt/AiDownloader -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include -I/usr/include/libxml++-2.6 -I/usr/lib/libxml++-2.6/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/4.9 -I/usr/include/x86_64-linux-gnu/c++/4.9 -I/usr/include/c++/4.9/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.9/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../AiDownloader/aidownloader.h -o moc_aidownloader.cpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/andy/Programming/Projects/AiMangaDownloader/qt/AiDownloader -I/usr/include/libxml2 -I/usr/include/glibmm-2.4 -I/usr/lib/x86_64-linux-gnu/glibmm-2.4/include -I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/include/sigc++-2.0 -I/usr/lib/x86_64-linux-gnu/sigc++-2.0/include -I/usr/include/libxml++-2.6 -I/usr/lib/libxml++-2.6/include -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtNetwork -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/4.9 -I/usr/include/x86_64-linux-gnu/c++/4.9 -I/usr/include/c++/4.9/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.9/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../AiDownloader/aidownloader.h -o moc_aidownloader.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -321,9 +326,13 @@ main.o: ../AiDownloader/main.cpp ../AiDownloader/aidownloader.h
 aidownloader.o: ../AiDownloader/aidownloader.cpp ../../src/curlpprequest.cpp \
 		../../src/curlpprequest.hpp \
 		../../src/configuration.hpp \
+		../../src/MangaObject.hpp \
 		../AiDownloader/aidownloader.h \
 		ui_aidownloader.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o aidownloader.o ../AiDownloader/aidownloader.cpp
+
+parser.o: ../../src/parser.cpp ../../src/parser.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o parser.o ../../src/parser.cpp
 
 moc_aidownloader.o: moc_aidownloader.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_aidownloader.o moc_aidownloader.cpp

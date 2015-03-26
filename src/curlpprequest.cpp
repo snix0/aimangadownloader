@@ -18,6 +18,7 @@
 #include "curlpprequest.hpp"
 #include <QString>
 #include <QTextStream>
+#include <QUrl>
 
 using namespace curlpp::options;
 
@@ -88,6 +89,33 @@ std::vector<QString> CurlRequest::requestList() {
     std::cout << "FINISHED" << std::endl;
     return result;
 }
+
+QUrl CurlRequest::getImageLink(QString url) {
+    curlpp::Cleanup myCleanup;
+    curlpp::Easy myRequest;
+    std::ostringstream os;
+    std::list<std::string> headers;
+
+    headers.push_back(HEADER_ACCEPT);
+    headers.push_back(HEADER_USER_AGENT);
+    myRequest.setOpt(new curlpp::options::HttpHeader(headers));
+    myRequest.setOpt(new curlpp::options::FollowLocation(true));
+
+    myRequest.setOpt<Url>(url.toUtf8().constData());
+    os << myRequest;
+    std::string response = os.str();
+
+    xmlDoc* doc = htmlReadDoc((xmlChar*)response.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+    xmlNode* node = xmlDocGetRootElement(doc);
+    xmlpp::Element* root = new xmlpp::Element(node);
+
+    std::string path_to_image = "//div[@class=\"ipsBox\"]/div/div/img/@src";
+    auto image = root->find(path_to_image);
+    std::cout << dynamic_cast<xmlpp::Attribute*>(image[0])->get_value() << std::endl;
+    return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(image[0])->get_value().c_str());
+}
+
+
 //
 //std::vector<std::string> CurlRequest::requestNew(Configuration conf) { //todo replace with MangaList
 //

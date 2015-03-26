@@ -38,9 +38,9 @@ public:
     QAction *actionAbout;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QLabel *label;
     QListView *listView;
-    QListView *right;
+    QLabel *label;
+    QLabel *label_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuSources;
@@ -52,6 +52,7 @@ public:
         if (AiDownloader->objectName().isEmpty())
             AiDownloader->setObjectName(QStringLiteral("AiDownloader"));
         AiDownloader->resize(1303, 680);
+        AiDownloader->setMaximumSize(QSize(1920, 1080));
         actionFile = new QAction(AiDownloader);
         actionFile->setObjectName(QStringLiteral("actionFile"));
         actionRestore = new QAction(AiDownloader);
@@ -68,26 +69,29 @@ public:
         actionAbout->setObjectName(QStringLiteral("actionAbout"));
         centralWidget = new QWidget(AiDownloader);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
+        centralWidget->setMaximumSize(QSize(1920, 1080));
         gridLayout = new QGridLayout(centralWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        label = new QLabel(centralWidget);
-        label->setObjectName(QStringLiteral("label"));
-        label->setPixmap(QPixmap(QString::fromUtf8("../../res/logosmall.png")));
-
-        gridLayout->addWidget(label, 1, 0, 1, 1);
-
+        gridLayout->setContentsMargins(5, 5, 5, 5);
         listView = new QListView(centralWidget);
         listView->setObjectName(QStringLiteral("listView"));
         listView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-        gridLayout->addWidget(listView, 3, 0, 1, 1);
+        gridLayout->addWidget(listView, 2, 0, 1, 1);
 
-        right = new QListView(centralWidget);
-        right->setObjectName(QStringLiteral("right"));
+        label = new QLabel(centralWidget);
+        label->setObjectName(QStringLiteral("label"));
+        label->setPixmap(QPixmap(QString::fromUtf8("../../res/logosmall.png")));
 
-        gridLayout->addWidget(right, 3, 1, 1, 1);
+        gridLayout->addWidget(label, 0, 0, 1, 1);
+
+        label_2 = new QLabel(centralWidget);
+        label_2->setObjectName(QStringLiteral("label_2"));
+        label_2->setMaximumSize(QSize(16777215, 16777215));
+
+        gridLayout->addWidget(label_2, 2, 1, 1, 1);
 
         AiDownloader->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(AiDownloader);
@@ -107,9 +111,6 @@ public:
 
         menuBar->addAction(menuFile->menuAction());
         menuBar->addAction(menuSources->menuAction());
-        menuFile->addAction(actionFile);
-        menuFile->addSeparator();
-        menuFile->addAction(actionRestore);
         menuFile->addSeparator();
         menuFile->addAction(actionExit);
         menuSources->addAction(actionAdd_New_Source);
@@ -133,6 +134,7 @@ public:
         actionUpdate_Sources->setText(QApplication::translate("AiDownloader", "Update Sources", 0));
         actionAbout->setText(QApplication::translate("AiDownloader", "About", 0));
         label->setText(QString());
+        label_2->setText(QString());
         menuFile->setTitle(QApplication::translate("AiDownloader", "File", 0));
         menuSources->setTitle(QApplication::translate("AiDownloader", "Sources", 0));
     } // retranslateUi

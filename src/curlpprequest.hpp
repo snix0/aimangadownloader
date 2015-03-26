@@ -12,6 +12,7 @@
 #include <curl/curl.h>
 #include <glibmm.h>
 #include <QString>
+#include <QUrl>
 #include "configuration.hpp"
 #include "MangaObject.hpp"
 
@@ -21,7 +22,7 @@ class CurlRequest {
         ~CurlRequest();
         std::vector<QString> requestList();
         //std::vector<std::string> requestNew(Configuration conf);
-        //getImage(MangaObject mo);
+        QUrl getImageLink(QString url);
         //std::string getDescription(MangaObject mo);
         //std::vector<std::string> getTags(MangaObject mo);
         //std::string getDateModified(MangaObject mo);

@@ -1,17 +1,8 @@
-#include "parser.h"
+#include <QString>
+#include "parser.hpp"
 
-Parser::parseManga(MangaObject mo) {
-
+Parser::Parser() {
 }
 
 Parser::~Parser() {
-
-}
-
-Parser::getCurrentSource(Configuration conf) {
-
-}
-
-Parser::getMangaList(CurlRequest cr) {
-
 }
