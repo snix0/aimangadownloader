@@ -59,26 +59,30 @@ void AiDownloader::on_listView_clicked() {
         QStringList manga_data = in.readLine().split("|"); //TODO
         QString url = manga_data.value(manga_data.length()-1);
 
-        QNetworkAccessManager* access_manager = new QNetworkAccessManager();
-        QNetworkRequest request(curl.getImageLink(url));
-        QNetworkReply* reply = access_manager->get(request);
-        QEventLoop loop;
-        QTimer timer;
-        timer.setSingleShot(true);
-        QObject::connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
-        QObject::connect(access_manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
-        timer.start(6000); //3s timeout
-        loop.exec();
+        QString chapter_url = curl.getChapters(url);
+        xmlpp::NodeSet image_links = curl.getChapterImages(chapter_url);
+        curl.getAllImages(image_links);
 
-        if (timer.isActive())
-            timer.stop(); //download complete
-        else
-            std::cout << "TIME OUT" << std::endl;
-
-        QByteArray bytes = reply->readAll();
-        QImage image(20, 20, QImage::Format_Indexed8);
-        image.loadFromData(bytes);
-        ui->label_2->setScaledContents(true);
-        ui->label_2->setPixmap(QPixmap::fromImage(image));
+//        QNetworkAccessManager* access_manager = new QNetworkAccessManager();
+//        QNetworkRequest request(curl.getImageLink(url));
+//        QNetworkReply* reply = access_manager->get(request);
+//        QEventLoop loop;
+//        QTimer timer;
+//        timer.setSingleShot(true);
+//        QObject::connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+//        QObject::connect(access_manager, SIGNAL(finished(QNetworkReply*)), &loop, SLOT(quit()));
+//        timer.start(6000); //3s timeout
+//        loop.exec();
+//
+//        if (timer.isActive())
+//            timer.stop(); //download complete
+//        else
+//            std::cout << "TIME OUT" << std::endl;
+//
+//        QByteArray bytes = reply->readAll();
+//        QImage image(20, 20, QImage::Format_Indexed8);
+//        image.loadFromData(bytes);
+//        ui->label_2->setScaledContents(true);
+//        ui->label_2->setPixmap(QPixmap::fromImage(image));
     }
 }

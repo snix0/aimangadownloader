@@ -23,6 +23,10 @@ class CurlRequest {
         std::vector<QString> requestList();
         //std::vector<std::string> requestNew(Configuration conf);
         QUrl getImageLink(QString url);
+        QString getChapters(QString url);
+        xmlpp::NodeSet getChapterImages(QString url);
+        void getImage(QUrl url);
+        void getAllImages(xmlpp::NodeSet links);
         //std::string getDescription(MangaObject mo);
         //std::vector<std::string> getTags(MangaObject mo);
         //std::string getDateModified(MangaObject mo);

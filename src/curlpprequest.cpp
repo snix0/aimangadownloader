@@ -115,26 +115,76 @@ QUrl CurlRequest::getImageLink(QString url) {
     return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(image[0])->get_value().c_str());
 }
 
+QString CurlRequest::getChapters(QString url) {
+    curlpp::Cleanup myCleanup;
+    curlpp::Easy myRequest;
+    std::ostringstream os;
+    std::list<std::string> headers;
 
-//
-//std::vector<std::string> CurlRequest::requestNew(Configuration conf) { //todo replace with MangaList
-//
-//}
-//
-////std::string CurlRequest::getImage(MangaObject mo) {
-//
-//    FILE* file = std::fopen("temporary.txt", "w");
-//    if (file) {
-//        curlpp::types::WriteFunctionFunctor functor(utilspp::BindFirst(utilspp::make_functor(&FileCallback), file));
-//        curlpp::options::WriteFunction *getFileOpt = new curlpp::options::WriteFunction(functor);
-//        myRequest.setOpt(getFileOpt);
-//
-//        //myRequest.setOpt<Url>("http://bato.to/forums/public/style_images/11_4_logo.png")
-//        //myRequest.setOpt<Url>("http://img.bato.to/comics/2014/07/24/g/read53d196e7c8b68/img000002.png");
-//        //myRequest.setOpt<Url>("https://bato.to/comic/_/comics/?per_page=30&st=60");
-//        //myRequest.perform();
-//    }
-////}
+    headers.push_back(HEADER_ACCEPT);
+    headers.push_back(HEADER_USER_AGENT);
+    myRequest.setOpt(new curlpp::options::HttpHeader(headers));
+    myRequest.setOpt(new curlpp::options::FollowLocation(true));
+
+    myRequest.setOpt<Url>(url.toUtf8().constData());
+    os << myRequest;
+    std::string response = os.str();
+
+    xmlDoc* doc = htmlReadDoc((xmlChar*)response.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+    xmlNode* node = xmlDocGetRootElement(doc);
+    xmlpp::Element* root = new xmlpp::Element(node);
+
+    std::string path_to_chapter = ".//div/table[@class=\"ipb_table chapters_list\"]/tbody//td/a/@href";
+    auto chapter_link = root->find(path_to_chapter);
+    std::cout << dynamic_cast<xmlpp::Attribute*>(chapter_link[0])->get_value() << std::endl;
+    return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(chapter_link[0])->get_value().c_str());
+}
+
+xmlpp::NodeSet CurlRequest::getChapterImages(QString url) {
+    curlpp::Cleanup myCleanup;
+    curlpp::Easy myRequest;
+    std::ostringstream os;
+    std::list<std::string> headers;
+
+    headers.push_back(HEADER_ACCEPT);
+    headers.push_back(HEADER_USER_AGENT);
+    myRequest.setOpt(new curlpp::options::HttpHeader(headers));
+    myRequest.setOpt(new curlpp::options::FollowLocation(true));
+
+    myRequest.setOpt<Url>(url.toUtf8().constData());
+    os << myRequest;
+    std::string response = os.str();
+
+    xmlDoc* doc = htmlReadDoc((xmlChar*)response.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
+    xmlNode* node = xmlDocGetRootElement(doc);
+    xmlpp::Element* root = new xmlpp::Element(node);
+
+    std::string path_to_chapter_page = "//img[@id=\"comic_page\"]/@src";
+    return root->find(path_to_chapter_page);
+}
+
+void CurlRequest::getImage(QUrl url) {
+
+    curlpp::Cleanup myCleanup;
+    curlpp::Easy myRequest;
+    std::cout << url.fileName().toStdString() << std::endl;
+    FILE* file = std::fopen(url.fileName().toStdString().c_str(), "w");
+    if (file) {
+        curlpp::types::WriteFunctionFunctor functor(utilspp::BindFirst(utilspp::make_functor(&FileCallback), file));
+        curlpp::options::WriteFunction *getFileOpt = new curlpp::options::WriteFunction(functor);
+        myRequest.setOpt(getFileOpt);
+
+        myRequest.setOpt<Url>(QString(url.toEncoded()).toStdString());
+        myRequest.perform();
+    }
+}
+
+void CurlRequest::getAllImages(xmlpp::NodeSet links) {
+    for (int i = 0; i != links.size(); ++i) {
+        getImage(QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(links[i])->get_value().c_str()));
+    }
+}
+
 //
 //std::string CurlRequest::getDescription(MangaObject mo) {
 //

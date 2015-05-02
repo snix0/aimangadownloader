@@ -21,6 +21,7 @@
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTabWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QWidget>
 
@@ -41,6 +42,11 @@ public:
     QListView *listView;
     QLabel *label;
     QLabel *label_2;
+    QTabWidget *tabWidget;
+    QWidget *tab;
+    QGridLayout *gridLayout_2;
+    QListView *chapters;
+    QWidget *tab_2;
     QMenuBar *menuBar;
     QMenu *menuFile;
     QMenu *menuSources;
@@ -69,7 +75,6 @@ public:
         actionAbout->setObjectName(QStringLiteral("actionAbout"));
         centralWidget = new QWidget(AiDownloader);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        centralWidget->setMaximumSize(QSize(1920, 1080));
         gridLayout = new QGridLayout(centralWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
@@ -92,6 +97,31 @@ public:
         label_2->setMaximumSize(QSize(16777215, 16777215));
 
         gridLayout->addWidget(label_2, 2, 1, 1, 1);
+
+        tabWidget = new QTabWidget(centralWidget);
+        tabWidget->setObjectName(QStringLiteral("tabWidget"));
+        tab = new QWidget();
+        tab->setObjectName(QStringLiteral("tab"));
+        gridLayout_2 = new QGridLayout(tab);
+        gridLayout_2->setSpacing(6);
+        gridLayout_2->setContentsMargins(11, 11, 11, 11);
+        gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
+        chapters = new QListView(tab);
+        chapters->setObjectName(QStringLiteral("chapters"));
+        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(chapters->sizePolicy().hasHeightForWidth());
+        chapters->setSizePolicy(sizePolicy);
+
+        gridLayout_2->addWidget(chapters, 0, 0, 1, 1);
+
+        tabWidget->addTab(tab, QString());
+        tab_2 = new QWidget();
+        tab_2->setObjectName(QStringLiteral("tab_2"));
+        tabWidget->addTab(tab_2, QString());
+
+        gridLayout->addWidget(tabWidget, 2, 2, 1, 1);
 
         AiDownloader->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(AiDownloader);
@@ -120,6 +150,9 @@ public:
         QObject::connect(actionExit, SIGNAL(triggered()), AiDownloader, SLOT(close()));
         QObject::connect(actionUpdate_Sources, SIGNAL(triggered()), AiDownloader, SLOT(updateMangaList()));
 
+        tabWidget->setCurrentIndex(0);
+
+
         QMetaObject::connectSlotsByName(AiDownloader);
     } // setupUi
 
@@ -135,6 +168,8 @@ public:
         actionAbout->setText(QApplication::translate("AiDownloader", "About", 0));
         label->setText(QString());
         label_2->setText(QString());
+        tabWidget->setTabText(tabWidget->indexOf(tab), QApplication::translate("AiDownloader", "Chapters", 0));
+        tabWidget->setTabText(tabWidget->indexOf(tab_2), QApplication::translate("AiDownloader", "Info", 0));
         menuFile->setTitle(QApplication::translate("AiDownloader", "File", 0));
         menuSources->setTitle(QApplication::translate("AiDownloader", "Sources", 0));
     } // retranslateUi
