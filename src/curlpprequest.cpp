@@ -24,6 +24,7 @@ using namespace curlpp::options;
 
 #define HEADER_ACCEPT "Accept:text/html,application/xhtml+xml,application/xml"
 #define HEADER_USER_AGENT "User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.70 Safari/537.17"
+//#define HEADER_MOBILE_USER_AGENT "Mozilla/5.0 (Linux; <Android Version>; <Build Tag etc.>) AppleWebKit/<WebKit Rev> (KHTML, like Gecko) Chrome/<Chrome Rev> Mobile Safari/<WebKit Rev>"
 
 CurlRequest::CurlRequest() {
     curlpp::Cleanup myCleanup;
@@ -134,9 +135,11 @@ QString CurlRequest::getChapters(QString url) {
     xmlNode* node = xmlDocGetRootElement(doc);
     xmlpp::Element* root = new xmlpp::Element(node);
 
-    std::string path_to_chapter = ".//div/table[@class=\"ipb_table chapters_list\"]/tbody//td/a/@href";
+    std::string path_to_chapter = ".//div/table[@class=\"ipb_table chapters_list\"]/tbody/tr[@class=\"row lang_English chapter_row\"]/td/a/@href";
     auto chapter_link = root->find(path_to_chapter);
-    std::cout << dynamic_cast<xmlpp::Attribute*>(chapter_link[0])->get_value() << std::endl;
+    for (auto i = 0; i != chapter_link.size(); ++i) {
+        std::cout << dynamic_cast<xmlpp::Attribute*>(chapter_link[i])->get_value() << std::endl;
+    }
     return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(chapter_link[0])->get_value().c_str());
 }
 
