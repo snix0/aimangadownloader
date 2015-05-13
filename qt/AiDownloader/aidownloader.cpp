@@ -59,9 +59,16 @@ void AiDownloader::on_listView_clicked() {
         QStringList manga_data = in.readLine().split("|"); //TODO
         QString url = manga_data.value(manga_data.length()-1);
 
-        QString chapter_url = curl.getChapters(url);
-        xmlpp::NodeSet image_links = curl.getChapterImages(chapter_url);
-        curl.getAllImages(image_links);
+        QVector<QString> chapter_url = curl.getChapters(url);
+        QStringListModel* model = new QStringListModel(QList<QString>::fromVector(chapter_url));
+        QModelIndex index = model->index(0, 0);
+        qDebug() << index;
+        qDebug() << model->setData(index, QString("HI"), 4);
+        ui->tabWidget->findChild<QListView*>("chapters")->setModel(model);
+        qDebug() << model->data(index, 4).toString();
+
+//        xmlpp::NodeSet image_links = curl.getChapterImages(chapter_url);
+//        curl.getAllImages(image_links);
 
 //        QNetworkAccessManager* access_manager = new QNetworkAccessManager();
 //        QNetworkRequest request(curl.getImageLink(url));

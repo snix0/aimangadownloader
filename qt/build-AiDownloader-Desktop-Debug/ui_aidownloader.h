@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'aidownloader.ui'
 **
-** Created by: Qt User Interface Compiler version 5.3.2
+** Created by: Qt User Interface Compiler version 5.4.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -108,11 +108,6 @@ public:
         gridLayout_2->setObjectName(QStringLiteral("gridLayout_2"));
         chapters = new QListView(tab);
         chapters->setObjectName(QStringLiteral("chapters"));
-        QSizePolicy sizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(chapters->sizePolicy().hasHeightForWidth());
-        chapters->setSizePolicy(sizePolicy);
 
         gridLayout_2->addWidget(chapters, 0, 0, 1, 1);
 
