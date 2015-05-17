@@ -94,3 +94,24 @@ void AiDownloader::on_listView_clicked() {
 //        ui->label_2->setPixmap(QPixmap::fromImage(image));
     }
 }
+
+void AiDownloader::on_chapters_clicked() {
+    QModelIndex selected = ui->listView->selectionModel()->currentIndex();
+    QFile input_file("mangalist");
+    CurlRequest curl = CurlRequest();
+    if (input_file.open(QIODevice::ReadOnly)) {
+        QTextStream in(&input_file);
+        for (int i = 0; i < selected.row(); ++i, in.readLine());
+        QStringList manga_data = in.readLine().split("|"); //TODO
+        QString url = manga_data.value(manga_data.length()-1);
+
+        QVector<QPair<QString, QString>> chapter_data = curl.getChapters(url);
+        QVector<QUrl> chapter_url;
+        std::transform(chapter_data.begin(), chapter_data.end(), std::back_inserter(chapter_url), [](const QPair<QString, QString>& a) { return a.first; });
+        QModelIndex selected_chapter = ui->chapters->selectionModel()->currentIndex();
+        qDebug() << chapter_url[0];
+        qDebug() << chapter_url.size() << " " << selected_chapter.row();
+        curl.getAllImages(curl.getChapterImages(chapter_url[selected_chapter.row()]));
+        qDebug() << "GOT IMAGE " << chapter_url[selected_chapter.row()];
+    }
+}

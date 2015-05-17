@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'aidownloader.h'
 **
-** Created by: The Qt Meta Object Compiler version 67 (Qt 5.3.2)
+** Created by: The Qt Meta Object Compiler version 67 (Qt 5.4.1)
 **
 ** WARNING! All changes made in this file will be lost!
 *****************************************************************************/
@@ -12,15 +12,15 @@
 #if !defined(Q_MOC_OUTPUT_REVISION)
 #error "The header file 'aidownloader.h' doesn't include <QObject>."
 #elif Q_MOC_OUTPUT_REVISION != 67
-#error "This file was generated using the moc from 5.3.2. It"
+#error "This file was generated using the moc from 5.4.1. It"
 #error "cannot be used with the include files from this version of Qt."
 #error "(The moc has changed too much.)"
 #endif
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_AiDownloader_t {
-    QByteArrayData data[4];
-    char stringdata[50];
+    QByteArrayData data[5];
+    char stringdata[70];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -29,13 +29,15 @@ struct qt_meta_stringdata_AiDownloader_t {
     )
 static const qt_meta_stringdata_AiDownloader_t qt_meta_stringdata_AiDownloader = {
     {
-QT_MOC_LITERAL(0, 0, 12),
-QT_MOC_LITERAL(1, 13, 15),
-QT_MOC_LITERAL(2, 29, 0),
-QT_MOC_LITERAL(3, 30, 19)
+QT_MOC_LITERAL(0, 0, 12), // "AiDownloader"
+QT_MOC_LITERAL(1, 13, 15), // "updateMangaList"
+QT_MOC_LITERAL(2, 29, 0), // ""
+QT_MOC_LITERAL(3, 30, 19), // "on_listView_clicked"
+QT_MOC_LITERAL(4, 50, 19) // "on_chapters_clicked"
+
     },
     "AiDownloader\0updateMangaList\0\0"
-    "on_listView_clicked"
+    "on_listView_clicked\0on_chapters_clicked"
 };
 #undef QT_MOC_LITERAL
 
@@ -45,7 +47,7 @@ static const uint qt_meta_data_AiDownloader[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -53,10 +55,12 @@ static const uint qt_meta_data_AiDownloader[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   24,    2, 0x0a /* Public */,
-       3,    0,   25,    2, 0x0a /* Public */,
+       1,    0,   29,    2, 0x0a /* Public */,
+       3,    0,   30,    2, 0x0a /* Public */,
+       4,    0,   31,    2, 0x0a /* Public */,
 
  // slots: parameters
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
 
@@ -70,6 +74,7 @@ void AiDownloader::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         switch (_id) {
         case 0: _t->updateMangaList(); break;
         case 1: _t->on_listView_clicked(); break;
+        case 2: _t->on_chapters_clicked(); break;
         default: ;
         }
     }
@@ -78,7 +83,7 @@ void AiDownloader::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
 
 const QMetaObject AiDownloader::staticMetaObject = {
     { &QMainWindow::staticMetaObject, qt_meta_stringdata_AiDownloader.data,
-      qt_meta_data_AiDownloader,  qt_static_metacall, 0, 0}
+      qt_meta_data_AiDownloader,  qt_static_metacall, Q_NULLPTR, Q_NULLPTR}
 };
 
 
@@ -89,7 +94,7 @@ const QMetaObject *AiDownloader::metaObject() const
 
 void *AiDownloader::qt_metacast(const char *_clname)
 {
-    if (!_clname) return 0;
+    if (!_clname) return Q_NULLPTR;
     if (!strcmp(_clname, qt_meta_stringdata_AiDownloader.stringdata))
         return static_cast<void*>(const_cast< AiDownloader*>(this));
     return QMainWindow::qt_metacast(_clname);
@@ -101,13 +106,13 @@ int AiDownloader::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }

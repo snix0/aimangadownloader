@@ -24,6 +24,7 @@ private:
 public slots:
     void updateMangaList();
     void on_listView_clicked();
+    void on_chapters_clicked();
 };
 
 #endif // AIDOWNLOADER_H

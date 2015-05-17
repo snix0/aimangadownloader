@@ -146,9 +146,6 @@ QVector<QPair<QString, QString>> CurlRequest::getChapters(QString url) {
     qDebug() << "CHAPTER LINK" << chapter_link.size();
     qDebug() << "TITLE LINK " << title_link.size();
     for (auto i = 0; i != chapter_link.size(); ++i) {
-        qDebug() << "HI";
-        qDebug() << QString::fromStdString(dynamic_cast<xmlpp::Attribute*>(chapter_link[i])->get_value().raw());
-        qDebug() << QString::fromStdString(dynamic_cast<xmlpp::ContentNode*>(title_link[i])->get_content().raw());
         QString chapter_string = QString::fromStdString(dynamic_cast<xmlpp::Attribute*>(chapter_link[i])->get_value().raw());
         QString title_string = QString::fromStdString(dynamic_cast<xmlpp::ContentNode*>(title_link[i])->get_content().raw());
         chapters.append(QPair<QString, QString>(chapter_string, title_string));
@@ -157,7 +154,7 @@ QVector<QPair<QString, QString>> CurlRequest::getChapters(QString url) {
     return chapters;
 }
 
-xmlpp::NodeSet CurlRequest::getChapterImages(QString url) {
+xmlpp::NodeSet CurlRequest::getChapterImages(const QUrl& url) {
     curlpp::Cleanup myCleanup;
     curlpp::Easy myRequest;
     std::ostringstream os;
@@ -168,7 +165,7 @@ xmlpp::NodeSet CurlRequest::getChapterImages(QString url) {
     myRequest.setOpt(new curlpp::options::HttpHeader(headers));
     myRequest.setOpt(new curlpp::options::FollowLocation(true));
 
-    myRequest.setOpt<Url>(url.toUtf8().constData());
+    myRequest.setOpt<Url>(url.url().toUtf8().constData());
     os << myRequest;
     std::string response = os.str();
 
@@ -180,8 +177,7 @@ xmlpp::NodeSet CurlRequest::getChapterImages(QString url) {
     return root->find(path_to_chapter_page);
 }
 
-void CurlRequest::getImage(QUrl url) {
-
+void CurlRequest::getImage(const QUrl& url) {
     curlpp::Cleanup myCleanup;
     curlpp::Easy myRequest;
     std::cout << url.fileName().toStdString() << std::endl;
