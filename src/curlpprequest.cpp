@@ -20,6 +20,7 @@
 #include <QTextStream>
 #include <QUrl>
 #include <QVector>
+#include <QDebug>
 
 using namespace curlpp::options;
 
@@ -117,7 +118,7 @@ QUrl CurlRequest::getImageLink(QString url) {
     return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(image[0])->get_value().c_str());
 }
 
-QVector<QString> CurlRequest::getChapters(QString url) {
+QVector<QPair<QString, QString>> CurlRequest::getChapters(QString url) {
     curlpp::Cleanup myCleanup;
     curlpp::Easy myRequest;
     std::ostringstream os;
@@ -135,15 +136,22 @@ QVector<QString> CurlRequest::getChapters(QString url) {
     xmlDoc* doc = htmlReadDoc((xmlChar*)response.c_str(), NULL, NULL, HTML_PARSE_RECOVER | HTML_PARSE_NOERROR | HTML_PARSE_NOWARNING);
     xmlNode* node = xmlDocGetRootElement(doc);
     xmlpp::Element* root = new xmlpp::Element(node);
-    QVector<QString> chapters;
+    QVector<QPair<QString, QString>> chapters;
 
-    std::string path_to_chapter = ".//div/table[@class=\"ipb_table chapters_list\"]/tbody/tr[@class=\"row lang_English chapter_row\"]/td/a/@href";
+    std::string path_to_chapter = ".//div/table[@class=\"ipb_table chapters_list\"]/tbody/tr[@class=\"row lang_English chapter_row\"]/td/a[contains(@href, 'read')]/@href";
+    std::string path_to_title = ".//div/table[@class=\"ipb_table chapters_list\"]/tbody/tr[@class=\"row lang_English chapter_row\"]/td/a[contains(@href, 'read')]/text()";
     auto chapter_link = root->find(path_to_chapter);
+    auto title_link = root->find(path_to_title);
+    //assert(chapter_link.size() == title_link.size());
+    qDebug() << "CHAPTER LINK" << chapter_link.size();
+    qDebug() << "TITLE LINK " << title_link.size();
     for (auto i = 0; i != chapter_link.size(); ++i) {
-        std::cout << dynamic_cast<xmlpp::Attribute*>(chapter_link[i])->get_value() << std::endl;
+        qDebug() << "HI";
+        qDebug() << QString::fromStdString(dynamic_cast<xmlpp::Attribute*>(chapter_link[i])->get_value().raw());
+        qDebug() << QString::fromStdString(dynamic_cast<xmlpp::ContentNode*>(title_link[i])->get_content().raw());
         QString chapter_string = QString::fromStdString(dynamic_cast<xmlpp::Attribute*>(chapter_link[i])->get_value().raw());
-        if (chapter_string.contains(QString("read")))
-            chapters.append(chapter_string);
+        QString title_string = QString::fromStdString(dynamic_cast<xmlpp::ContentNode*>(title_link[i])->get_content().raw());
+        chapters.append(QPair<QString, QString>(chapter_string, title_string));
     }
 //    return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(chapter_link[0])->get_value().c_str());
     return chapters;

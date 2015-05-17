@@ -59,13 +59,14 @@ void AiDownloader::on_listView_clicked() {
         QStringList manga_data = in.readLine().split("|"); //TODO
         QString url = manga_data.value(manga_data.length()-1);
 
-        QVector<QString> chapter_url = curl.getChapters(url);
+        QVector<QPair<QString, QString>> chapter_data = curl.getChapters(url);
+        QVector<QString> chapter_url;
+        std::transform(chapter_data.begin(), chapter_data.end(), std::back_inserter(chapter_url), [](const QPair<QString, QString>& a) { return a.second; });
+        qDebug() << chapter_url;
         QStringListModel* model = new QStringListModel(QList<QString>::fromVector(chapter_url));
-        QModelIndex index = model->index(0, 0);
-        qDebug() << index;
-        qDebug() << model->setData(index, QString("HI"), 4);
+        qDebug() << model->setData(selected, QString("HI"), Qt::StatusTipRole); //Qt::StatusTipRole
         ui->tabWidget->findChild<QListView*>("chapters")->setModel(model);
-        qDebug() << model->data(index, 4).toString();
+        qDebug() << model->data(selected, Qt::StatusTipRole).toString();
 
 //        xmlpp::NodeSet image_links = curl.getChapterImages(chapter_url);
 //        curl.getAllImages(image_links);
