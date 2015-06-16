@@ -112,9 +112,15 @@ QUrl CurlRequest::getImageLink(QString url) {
     xmlNode* node = xmlDocGetRootElement(doc);
     xmlpp::Element* root = new xmlpp::Element(node);
 
-    std::string path_to_image = "//div[@class=\"ipsBox\"]/div/div/img/@src";
+    qDebug() << "WATANABE";
+//    std::string path_to_image = "//div[@class=\"ipsBox\"]/div/div/img/@src";
+    std::string path_to_image = "//img[@id=\"comic_page\"]/@src";
     auto image = root->find(path_to_image);
-    std::cout << dynamic_cast<xmlpp::Attribute*>(image[0])->get_value() << std::endl;
+//    dynamic_cast<xmlpp::Attribute*>(image[0]);
+    std::cout << "IMAGE SIZE : " << image.size() << std::endl;
+//    std::cout << "AAA " << image[0] << std::endl;
+    qDebug() << "MAYU";
+    std::cout << "P3 " << dynamic_cast<xmlpp::Attribute*>(image[0])->get_value() << std::endl;
     return QString::fromUtf8(dynamic_cast<xmlpp::Attribute*>(image[0])->get_value().c_str());
 }
 
@@ -173,22 +179,32 @@ xmlpp::NodeSet CurlRequest::getChapterImages(const QUrl& url) {
     xmlNode* node = xmlDocGetRootElement(doc);
     xmlpp::Element* root = new xmlpp::Element(node);
 
+    std::string path_to_page_list = "//select[@id=\"page_select\"]/option/@value";
+    auto page_links = root->find(path_to_page_list);
+    for (int i = 0; i != page_links.size(); ++i) {
+        qDebug() <<  QString::fromStdString(dynamic_cast<xmlpp::Attribute*>(page_links[i])->get_value().raw());
+    }
+
     std::string path_to_chapter_page = "//img[@id=\"comic_page\"]/@src";
-    return root->find(path_to_chapter_page);
+    return root->find(path_to_page_list);
 }
 
 void CurlRequest::getImage(const QUrl& url) {
     curlpp::Cleanup myCleanup;
     curlpp::Easy myRequest;
-    std::cout << url.fileName().toStdString() << std::endl;
+    std::cout << "P4 " << url.fileName().toStdString() << std::endl;
     FILE* file = std::fopen(url.fileName().toStdString().c_str(), "w");
     if (file) {
         curlpp::types::WriteFunctionFunctor functor(utilspp::BindFirst(utilspp::make_functor(&FileCallback), file));
         curlpp::options::WriteFunction *getFileOpt = new curlpp::options::WriteFunction(functor);
         myRequest.setOpt(getFileOpt);
 
-        myRequest.setOpt<Url>(QString(url.toEncoded()).toStdString());
+        myRequest.setOpt<Url>(getImageLink(QString(url.toEncoded())).toEncoded().toStdString()); //TODO: cleanup
+//        getImageLink(QString(url.toEncoded()));
+
+        qDebug() << "PASS";
         myRequest.perform();
+        qDebug() << "DOWNLOADED";
     }
 }
 

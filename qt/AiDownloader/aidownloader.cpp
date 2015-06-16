@@ -109,8 +109,8 @@ void AiDownloader::on_chapters_clicked() {
         QVector<QUrl> chapter_url;
         std::transform(chapter_data.begin(), chapter_data.end(), std::back_inserter(chapter_url), [](const QPair<QString, QString>& a) { return a.first; });
         QModelIndex selected_chapter = ui->chapters->selectionModel()->currentIndex();
-        qDebug() << chapter_url[0];
-        qDebug() << chapter_url.size() << " " << selected_chapter.row();
+        qDebug() << "P1 " << chapter_url[0];
+        qDebug() << "P2 " << chapter_url.size() << " " << selected_chapter.row();
         curl.getAllImages(curl.getChapterImages(chapter_url[selected_chapter.row()]));
         qDebug() << "GOT IMAGE " << chapter_url[selected_chapter.row()];
     }
